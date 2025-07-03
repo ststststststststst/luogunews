@@ -9,11 +9,12 @@
 
 *斜体*
 
-$\LaTeX abc$
+\(abc\)
 
 `小代码框`
 
 ```cpp
+#include<bits/stdc++.h>
 大代码框
 ```
 }

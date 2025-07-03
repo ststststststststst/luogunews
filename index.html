@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -81,56 +80,113 @@
         </div>
     </div>
 
-    <script>
-        fetch('/ini.txt')
-            .then(response => {
-                if (!response.ok) throw new Error('文件读取失败');
-                return response.text();
-            })
-            .then(data => {
-                const sections = data.split('\n\n');
-                const buttonContainer = document.getElementById('news-buttons');
-                const modal = document.getElementById('news-modal');
-                const modalTitle = document.getElementById('modal-title');
-                const modalContent = document.getElementById('modal-content');
-                const closeBtn = document.querySelector('.close');
-                
-                closeBtn.onclick = () => modal.style.display = "none";
-                window.onclick = (event) => {
-                    if (event.target == modal) modal.style.display = "none";
-                }
-
-                sections.forEach(section => {
-                    if (section.trim() === '') return;
-                    
-                    const titleMatch = section.match(/^(.*?)\{/);
-                    if (!titleMatch) return;
-                    
-                    const title = titleMatch[1].trim();
-                    const contentStart = section.indexOf('{') + 1;
-                    const contentEnd = section.lastIndexOf('}');
-                    const content = section.slice(contentStart, contentEnd).trim();
-                    
-                    const button = document.createElement('button');
-                    button.className = 'news-button';
-                    button.textContent = title;
-                    button.onclick = () => {
-                        modalTitle.textContent = title;
-                        modalContent.innerHTML = marked.parse(content);
-                        MathJax.typeset(); // 重新渲染LaTeX公式
-                        modal.style.display = "block";
-                    };
-                    buttonContainer.appendChild(button);
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('news-buttons').innerHTML = 
-                    '<p>无法加载新闻内容: ' + error.message + '</p>';
-            });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        // 配置MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\$', '\$']],
+                displayMath: [['$$', '$$'], ['\$', '\$']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreHtmlClass: 'tex2jax_ignore'
+            }
+        };
+
+        // 解析ini.txt内容
+        function parseIniContent(content) {
+            const sections = [];
+            let currentSection = null;
+            let inSection = false;
+            
+            const lines = content.split('\n');
+            
+            for (const line of lines) {
+                if (line.trim() === '') continue;
+                
+                // 检测新节开始
+                const sectionStart = line.match(/^([^{]+)\{$/);
+                if (sectionStart) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    currentSection = {
+                        title: sectionStart[1].trim(),
+                        content: ''
+                    };
+                    inSection = true;
+                    continue;
+                }
+                
+                // 检测节结束
+                if (line.trim() === '}' && inSection) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                        currentSection = null;
+                    }
+                    inSection = false;
+                    continue;
+                }
+                
+                // 添加内容到当前节
+                if (inSection && currentSection) {
+                    currentSection.content += line + '\n';
+                }
+            }
+            
+            return sections;
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/ini.txt')
+                .then(response => {
+                    if (!response.ok) throw new Error('文件读取失败');
+                    return response.text();
+                })
+                .then(data => {
+                    const sections = parseIniContent(data);
+                    const buttonContainer = document.getElementById('news-buttons');
+                    const modal = document.getElementById('news-modal');
+                    const modalTitle = document.getElementById('modal-title');
+                    const modalContent = document.getElementById('modal-content');
+                    const closeBtn = document.querySelector('.close');
+                    
+                    closeBtn.onclick = () => modal.style.display = "none";
+                    window.onclick = (event) => {
+                        if (event.target == modal) modal.style.display = "none";
+                    }
+
+                    sections.forEach(section => {
+                        const button = document.createElement('button');
+                        button.className = 'news-button';
+                        button.textContent = section.title;
+                        button.onclick = () => {
+                            modalTitle.textContent = section.title;
+                            modalContent.innerHTML = marked.parse(section.content);
+                            
+                            // 确保MathJax加载完成后再渲染公式
+                            if (window.MathJax && window.MathJax.typesetPromise) {
+                                window.MathJax.typesetPromise([modalContent]).catch(err => console.log(err));
+                            }
+                            
+                            modal.style.display = "block";
+                        };
+                        buttonContainer.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('news-buttons').innerHTML = 
+                        '<p>无法加载新闻内容: ' + error.message + '</p>';
+                });
+        });
+    </script>
 </body>
 </html>

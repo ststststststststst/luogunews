@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>洛谷民间报</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .news-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .news-button:hover {
+            background-color: #2980b9;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 5px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>洛谷民间报</h1>
+    <div class="button-container" id="news-buttons"></div>
+
+    <div id="news-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        fetch('/ini.txt')
+            .then(response => {
+                if (!response.ok) throw new Error('文件读取失败');
+                return response.text();
+            })
+            .then(data => {
+                const sections = data.split('\n\n');
+                const buttonContainer = document.getElementById('news-buttons');
+                const modal = document.getElementById('news-modal');
+                const modalTitle = document.getElementById('modal-title');
+                const modalContent = document.getElementById('modal-content');
+                const closeBtn = document.querySelector('.close');
+                
+                closeBtn.onclick = () => modal.style.display = "none";
+                window.onclick = (event) => {
+                    if (event.target == modal) modal.style.display = "none";
+                }
+
+                sections.forEach(section => {
+                    if (section.trim() === '') return;
+                    
+                    const titleMatch = section.match(/^(.*?)\{/);
+                    if (!titleMatch) return;
+                    
+                    const title = titleMatch[1].trim();
+                    const contentStart = section.indexOf('{') + 1;
+                    const contentEnd = section.lastIndexOf('}');
+                    const content = section.slice(contentStart, contentEnd).trim();
+                    
+                    const button = document.createElement('button');
+                    button.className = 'news-button';
+                    button.textContent = title;
+                    button.onclick = () => {
+                        modalTitle.textContent = title;
+                        modalContent.innerHTML = marked.parse(content);
+                        MathJax.typeset(); // 重新渲染LaTeX公式
+                        modal.style.display = "block";
+                    };
+                    buttonContainer.appendChild(button);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('news-buttons').innerHTML = 
+                    '<p>无法加载新闻内容: ' + error.message + '</p>';
+            });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

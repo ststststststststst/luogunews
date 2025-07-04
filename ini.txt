@@ -13,9 +13,9 @@ By ![](https://cdn.luogu.com.cn/upload/usericon/884813.png)[_luogu_huowenshuo_](
 https://www.luogu.com.cn/discuss/1092310
 ## 方法一：修改 hosts 文件
 ### 性能
-推荐值：$3$ 星。
+推荐值：3 星。
 
-使用难度：$1$ 星。
+使用难度：1 星。
 
 访问速度：快。
 
@@ -51,9 +51,9 @@ https://www.luogu.com.cn/discuss/1092310
 
 ## 方法二：下载 
 ### 性能
-推荐值：$5$ 星。
+推荐值：5 星。
 
-使用难度：$0.5$ 星。
+使用难度：0.5 星。
 
 访问速度：快的飞起。
 

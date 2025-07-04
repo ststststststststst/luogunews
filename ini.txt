@@ -25,6 +25,10 @@ $abc$
 
 ```cpp
 #include<bits/stdc++.h>
-大代码框
+using namespace std;
+int main(){
+    
+    return 0;
+}
 ```
 \}

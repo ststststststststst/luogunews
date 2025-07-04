@@ -6,9 +6,72 @@
 内容不限，合理、健康即可。
 \}
 
+2025年7月4日期\{
+# 如何稳定的快速访问GitHub？
+By ![](https://cdn.luogu.com.cn/upload/usericon/884813.png)[_luogu_huowenshuo_](https://www.luogu.com.cn/user/884813)
+## 前言
+https://www.luogu.com.cn/discuss/1092310
+## 方法一：修改 hosts 文件
+### 性能
+推荐值：$3$ 星。
+
+使用难度：$1$ 星。
+
+访问速度：快。
+
+稳定性：过几天就不管用了。
+### How？
+路径：`C:\Windows\System32\drivers\etc`。
+![](https://cdn.luogu.com.cn/upload/image_hosting/bospa2ad.png)
+右键一下，点击“打开方式”，这里推荐用 `Visual Studio` 打开。
+![](https://cdn.luogu.com.cn/upload/image_hosting/4vzz2eb3.png)
+然后，在 `hosts` 文件的结尾添加这一串东西。
+```
+140.82.112.4 github.com
+151.101.1.6 github.global.ssl.fastly.net
+185.199.108.153 assets-cdn.github.com
+185.199.109.153 assets-cdn.github.com
+185.199.110.153 assets-cdn.github.com
+185.199.111.153 assets-cdn.github.com
+```
+像这样：![](https://cdn.luogu.com.cn/upload/image_hosting/f9ed0zql.png)
+然后以管理员身份保存，不要管杀毒软件。
+
+最后，如果你是 Windows，打开 `cmd`，输入 `ipconfig /flushdns`，大功告成！
+
+如果你是 Mac，输入 `sudo killall -HUP mDNSResponder`。
+
+如果你是 Linux，输入 `sudo nscd restart`。
+![](https://cdn.luogu.com.cn/upload/image_hosting/pb1zkz7x.png)
+![](https://cdn.luogu.com.cn/upload/image_hosting/2vaw68zu.png)
+### 注意事项
+
+[如果 `GitHub` 再次变慢，请更新 `hosts` 文件。](https://github.com/maxiaof/github-hosts)
+
+
+## 方法二：下载 
+### 性能
+推荐值：$5$ 星。
+
+使用难度：$0.5$ 星。
+
+访问速度：快的飞起。
+
+稳定性：非常不错。
+### How？
+打开我们亲爱的 `Microsoft Store`，搜索 `Watt Toolkit`，下载第一个。
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/35tdsjwk.png)
+
+打开 Watt Toolkit，点击“网站加速”，勾 `Github`，点击“一键加速”，大功告成！
+![](https://cdn.luogu.com.cn/upload/image_hosting/h1do45ni.png)
+访问速度不错：
+![](https://cdn.luogu.com.cn/upload/image_hosting/05eganuq.png)
+}
 
 2025年7月3日期\{
-# 2025年7月3日期 出版人：haofafa
+# 2025年7月3日期
+By ![](https://cdn.luogu.com.cn/upload/usericon/1240580.png)[Chinese_good_FaFa](https://www.luogu.com.cn/user/1240580)
 
 洛谷民间报成立啦！
 

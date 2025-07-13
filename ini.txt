@@ -6,6 +6,441 @@
 内容不限，合理、健康即可。
 \}
 
+2025年7月13日期 | 浅谈 ege 第一章 入门\{
+
+注意：本篇使用的 IDLE 为小熊猫 Dev-C++ (VS 可以走人了，两者可能存在差异)。
+
+### 0 简介
+
+ege.h 是针对 C++ 的图形库，可以帮助 C/C++ 初学者快速上手图形和游戏编程。\
+[ege.h 源码](https://www.luogu.me/paste/yugfvphf)。
+建议在自动连接中加上以下连接参数 (在部分 Dev-C++ 版本中已经默认设置)：
+
+```
+-lgraphics -luuid -lmsimg32 -lgdi32 -limm32 -lole32 -loleaut32 -lwinmm -lgdiplus
+```
+
+### 1 约定
+
+### A 坐标
+
+屏幕的坐标呈现以下形式：\
+![](https://cdn.luogu.com.cn/upload/image_hosting/sg03ccxe.png)
+
+其中，原点为屏幕左上角。
+
+## 2 入门
+
+接下来就可以开始写第一个 ege 程序了。
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::line(0,0,600,800); //画一条线
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/qv5xa7wt.png)注意：
+
+1. 在库文件中，函数所用的命名空间为 `ege`, 所以调用 `ege` 函数前需要 `ege::` 一下。
+
+2. 包含并使用本库时，不要包含 conio.h 头文件。
+
+## 3 正式开始
+
+在啰嗦一大通之后终于开始了。
+
+### A 一些乱七八糟的工具函数
+
+- `Sleep`
+
+#### 用法
+
+```
+Sleep(long ms)
+```
+
+用来等待 ms 毫秒。
+与 `<windows.h>` 的 `Sleep()` 类似。
+
+- `getch`
+
+#### 用法
+
+```cpp
+int EGEAPI getch();
+```
+
+读取一个字符。与 `<conio.h>` 中的 `getch()` 类似。
+
+目前用来防闪退（不理解的话你可以把上文代码中的 `	ege::getch(); //读取一个字符，防止闪退` 注释掉试试）。
+
+### B 绘图环境函数
+
+- `initgragh`
+
+```cpp
+void EGEAPI initgraph(int Width, int Height);        
+```
+
+#### 用途
+
+初始化图形环境，即创建窗口。
+
+#### 参数
+
+Width ：窗口宽度。
+Height : 窗口高度。
+
+- `closegraph()`
+
+```cpp
+void EGEAPI closegraph();                                          
+```
+
+#### 用途
+
+关闭图形环境，即关闭窗口。
+
+### C 颜色
+
+- 颜色表示
+  表示一个颜色有三种方法：
+
+#### 颜色常量
+
+有以下颜色常量：
+
+```
+常量			    值			  颜色
+--------		  --------	--------
+BLACK			    0			    黑
+BLUE			    0xAA0000	蓝
+GREEN			    0x00AA00	绿
+CYAN			    0xAAAA00	青
+RED				    0x0000AA	红
+MAGENTA			  0xAA00AA	紫
+BROWN			    0x0055AA	棕
+LIGHTGRAY		  0xAAAAAA	浅灰
+DARKGRAY		  0x555555	深灰
+LIGHTBLUE		  0xFF5555	亮蓝
+LIGHTGREEN	  0x55FF55	亮绿
+LIGHTCYAN		  0xFFFF55	亮青
+LIGHTRED		  0x5555FF	亮红
+LIGHTMAGENTA  0xFF55FF	亮紫
+YELLOW			  0x55FFFF	黄
+WHITE			    0xFFFFFF	白
+
+```
+
+#### RGB
+
+如果你不知道 RGB 是什么，可以参见[百度百科](https://baike.baidu.com/item/RGB/342517?fr=aladdin)。
+
+用法如下：
+
+```cpp
+EGERGB(r,g,b) //将 RGB 值 分别填入 r,g,b 处
+```
+
+注意：此处无需 `ege::`。
+
+#### RGBA
+
+如果你不知道 RGBA 是什么，可以参见[百度百科](https://baike.baidu.com/item/RGBA?fromModule=lemma_search-box)。
+
+用法如下：
+
+```cpp
+EGERGBA(r, g, b, a) //将 RGBA 值 分别填入 r,g,b,a 处
+```
+
+注意：此处无需 `ege::`。
+
+#### 补充：$0 \le r,g,b,a \le 255$
+
+- `setcolor`
+
+```cpp
+void EGEAPI setcolor(color_t color, PIMAGE pimg = NULL);   
+```
+
+#### 用途
+
+设置前景色
+
+#### 参数
+
+color：颜色
+
+- `setfillcolor`
+
+```cpp
+void EGEAPI setfillcolor(color_t color, PIMAGE pimg = NULL);   
+```
+
+#### 用途
+
+设置填充色
+
+#### 参数
+
+color：颜色
+
+- `setbkcolor`
+
+```cpp
+void EGEAPI setbkcolor(color_t color, PIMAGE pimg = NULL);   
+```
+
+#### 用途
+
+设置当前绘图背景色。
+
+#### 参数
+
+color：颜色
+
+- 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::setbkcolor(EGERGB(0,255,0));  	 //将窗口设置为绿色。
+	ege::Sleep(1000);					 //等待1000ms 。	
+	ege::setbkcolor(EGERGB(255,0,0));    //将窗口设置为红色。
+	ege::Sleep(1000);					 //等待1000ms 。
+	ege::setbkcolor(EGERGB(0,0,255));  	 //将窗口设置为蓝色。
+	ege::Sleep(1000);  					 //等待1000ms 。
+	ege::setbkcolor(EGERGB(255,255,0));  //将窗口设置为黄色。
+	ege::Sleep(1000);					 //等待1000ms 。
+	ege::setbkcolor(EGERGB(0,255,255));  //将窗口设置为青色。
+	ege::Sleep(1000); 					 //等待1000ms 。
+	ege::setbkcolor(EGERGB(255,0,255));  //将窗口设置为紫色。
+	ege::Sleep(1000);					 //等待1000ms 。
+	ege::setbkcolor(EGERGB(255,255,255));//将窗口设置为白色。
+	ege::Sleep(1000);	
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+### D 画图函数
+
+- `putpixel`
+
+```cpp
+void EGEAPI putpixel  (int x, int y, color_t color, PIMAGE pimg = NULL); 
+```
+
+#### 作用
+
+画点。
+
+#### 参数
+
+x,y：点的横纵坐标。
+color： 颜色。
+
+#### 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	srand(time(0));
+	for(int i=1;i<=600;i+=10)
+	{
+		for(int j=1;j<=800;j+=10)
+		{
+			ege::putpixel(i,j,EGERGBA(rand()%256,rand()%256,rand()%256,rand()%256)); //在i,j 点上画一个颜色随机的点。
+		}
+	}	
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+结果：![](https://cdn.luogu.com.cn/upload/image_hosting/5z3j71pa.png)与实际结果略有不同，诸君可在自家电脑上编译运行一下。
+
+- `line`
+
+```cpp
+void EGEAPI line(int x1, int y1, int x2, int y2, PIMAGE pimg = NULL);
+```
+
+#### 作用
+
+画线。
+
+#### 参数
+
+x1,y1：线段一个端点的横纵坐标。
+x2,y2: 线段另一个端点的横纵坐标。
+
+#### 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::line(0,0,600,800); //画一条线
+	ege::setcolor(EGERGB(255,0,0)); //将线段颜色设置为红色
+	ege::line(0,800,600,0); //再画一条线
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+结果：![](https://cdn.luogu.com.cn/upload/image_hosting/c9jpmor2.png)
+
+- 圆，圆弧，扇形
+
+```cpp
+void EGEAPI arc(int x, int y, int stangle, int endangle, int radius, PIMAGE pimg = NULL);                  // 画圆弧
+void EGEAPI circle(int x, int y, int radius, PIMAGE pimg = NULL);                                          // 画圆
+void EGEAPI pieslice(int x, int y, int stangle, int endangle, int radius, PIMAGE pimg = NULL);             // 画填充圆扇形
+```
+
+#### 作用
+
+见注释，写的很清楚了。
+
+#### 参数
+
+x,y: 圆心坐标
+stangle,endangle：圆心角的始边和终边的角度。
+radius：半径。
+
+#### 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::setcolor(EGERGB(255,255,0)); //将线段颜色设置为黄色
+	ege::setfillcolor(EGERGB(255,255,0)); //设置填充颜色
+	ege::circle(100,100,100); //以100,100为圆心，100为半径画圆。
+	ege::pieslice(100,300,0,360,100); //画一个实心圆（毕竟圆也算圆心角为360度的扇形。）
+	ege::arc(300,300,0,150,100);//画一个弧
+	ege::pieslice(500,500,280,350,100); //画一个扇形
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+结果：![](https://cdn.luogu.com.cn/upload/image_hosting/b0wpwywt.png)
+
+- 椭圆，椭圆弧，椭圆扇形
+
+```cpp
+void EGEAPI ellipse(int x, int y, int stangle, int endangle, int xradius, int yradius, PIMAGE pimg = NULL);// 画椭圆弧线
+void EGEAPI fillellipse(int x, int y, int xradius, int yradius, PIMAGE pimg = NULL);                       // 画填充椭圆
+void EGEAPI sector(int x, int y, int stangle, int endangle, int xradius, int yradius, PIMAGE pimg = NULL); // 画填充椭圆扇形
+```
+
+#### 作用
+
+不必多说，注释写的很清楚了。
+
+#### 参数
+
+x,y,stangle,endtangle 同上一节圆，圆弧，扇形。
+xradius,yradius: 椭圆的水平半径和垂直半径。
+
+#### 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::setcolor(EGERGB(255,255,0)); //将线段颜色设置为黄色
+	ege::setfillcolor(EGERGB(255,255,0)); //设置填充颜色
+	ege::ellipse(200,100,0,360,200,100); //画一个椭圆
+	ege::fillellipse(200,300,200,100); //画一个实心椭圆
+	ege::ellipse(200,500,0,150,200,100);//画一个椭圆弧
+	ege::sector(200,700,280,350,200,100); //画一个椭圆扇形
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/pha7jxsv.png)
+
+- 矩形
+
+```cpp
+void EGEAPI bar(int left, int top, int right, int bottom, PIMAGE pimg = NULL);                             // 画无边框填充矩形
+void EGEAPI fillrect(int left, int top, int right, int bottom, PIMAGE pimg = NULL);                      //画填充矩形 
+```
+
+#### 作用
+
+见注释。
+
+#### 参数
+
+left,right 左端，右端的横坐标
+top,bottom 上端，下端的纵坐标
+
+#### 实例
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h> //导入ege.h
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800); //初始化窗口
+	ege::setcolor(EGERGB(255,0,0)); //将线段颜色设置为红色
+	ege::setfillcolor(EGERGB(255,255,0)); //设置填充颜色
+	ege::fillrect(0,0,600,800); //画一个填充矩形
+	ege::setfillcolor(EGERGB(0,255,255)); // 设置填充颜色
+	ege::bar(100,100,500,700); //画一个无边框矩形
+	ege::getch(); //读取一个字符，防止闪退
+	ege::closegraph(); //关闭窗口
+	return 0;
+}
+```
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/23r8n4sl.png)
+
+---
+
+ege 的学习到此先告一段落，下一章我们讲学习图片，音频，与文本的处理。
+
+完结撒花！
+
+\}
+
 2025年7月9日期 | VScode 配置 C/C++ 环境\{
 By ![](https://cdn.luogu.com.cn/upload/usericon/1019968.png)[lijingshu_304775](https://www.luogu.com.cn/user/1019968)
 # VScode 配置 C/C++ 环境

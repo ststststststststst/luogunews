@@ -239,7 +239,7 @@ int main()
 } 
 ```
 
-运行结果：\
+运行结果：
 ![](https://cdn.luogu.com.cn/upload/image_hosting/czwytbv9.png)
 
 下一节，学习音频播放。

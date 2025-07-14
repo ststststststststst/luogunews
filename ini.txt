@@ -9,7 +9,242 @@ PM：Chinese_good_FaFa（uid：1240580）
 
 如需署名请自行加上，不支持代加。
 \}
+2025年7月15日期 | 浅谈 ege 第二章 图片，文本（入门篇） \{
+## 浅谈 ege 第二章 图片，文本（入门篇）
 
+浅谈 ege 目录：[here](https://www.luogu.me/paste/bmsa68x7)。
+建议按目录顺序学习。~~最近没大有时间，先水一篇应付一下。~~
+
+### 本节目录
+
+- Pre 关于 `LPCSTR`
+- A 文本处理
+- B 图片处理
+  1. 创建
+  2. 获取
+  3. 绘制
+
+### Pre 关于 LPCSTR 。
+
+这样东西本质上就是一个 `char*`。
+
+#### 用法
+
+举个例子，了解一下。
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h>
+using namespace std;
+int main()
+{
+  LPCSTR s1 = "%%%kkksc03"; //可以直接这样定义	
+  cout<<s1<<endl; //可以输出
+  LPCSTR s2 = "洛谷民间报";
+  cout<<s2<<endl;
+  s1 = "%%%chenzhe";
+  cout<<s1<<endl; //可以修改
+  s1=s2; //LPCSTR 之间可以相互赋值
+  cout<<s1<<endl;
+  char s3[20]="chinese_good_fafa";
+  s1=s3; // 可以由字符串直接赋值
+  cout<<s1<<endl;
+  string t = "Hello ege!";
+  // s1=t; //注意直接将string赋值到LPCSTR 会报错
+  s1=t.c_str(); //但这样可以。
+  cout<<s1<<endl;
+  cout<<"读入一个字符串"<<endl;
+  // cin>>s1; 直接读入会报错
+  cin>>t;
+  s1=t.c_str(); //所以得走曲线救国道路
+  cout<<s1<<endl;
+  return 0;
+}
+```
+
+运行结果：
+
+```
+%%%kkksc03
+洛谷民间报
+%%%chenzhe
+洛谷民间报
+chinese_good_fafa
+Hello ege!
+读入一个字符串
+luogu.com.cn
+luogu.com.cn
+
+--------------------------------
+Process exited after 42.64 seconds with return value 0
+请按任意键继续. . .
+```
+
+### A 文本处理
+
+话不多说，直接把函数摞上。
+
+```cpp
+void EGEAPI outtext(LPCSTR  textstring, PIMAGE pimg = NULL);                   // 在当前位置输出文字
+void EGEAPI outtext(CHAR  c, PIMAGE pimg = NULL);                              // 在当前位置输出字符
+void EGEAPI outtextxy(int x, int y, LPCSTR  textstring, PIMAGE pimg = NULL);   // 在指定位置输出文字
+void EGEAPI outtextxy(int x, int y, CHAR c, PIMAGE pimg = NULL);               // 在指定位置输出字符
+void EGEAPI outtextrect(int x, int y, int w, int h, LPCSTR  textstring, PIMAGE pimg = NULL); // 在指定矩形范围输出文字
+
+```
+
+参数说明：
+c： 待输出文字。
+textstring: 待输出字符串。
+x,y： 位置坐标。
+w,h： 矩形宽高。
+
+具体的用法看个例子。
+
+#### 例子
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h>
+using namespace std;
+int main()
+{
+	ege::initgraph(500,500); //初始化窗口。
+	ege::outtext('L');       //在当前位置输出字符。
+	ege::outtext("洛谷民间报");//在当前位置输出字符。
+	ege::outtextxy(50,50,"kkksc03");//在指定位置输出文字。
+	ege::outtextxy(60,60,'U');//在指定位置输出字符。
+	ege::outtextrect(80,80,100,100,"chinese_good_fafa");//在指定矩形范围输出文字.
+	ege::getch();            //读一个字符，防止闪退。
+	ege::closegraph();       //关闭窗口。
+	return 0;
+}
+```
+
+![](https://cdn.luogu.com.cn/upload/image_hosting/gc7liogr.png)
+
+### B 图片处理
+
+图片处理分为三步，创建，获取，绘制。
+我们直接举个例子：
+
+先把可爱的缺省源挂上：
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h>
+using namespace std;
+int main()
+{
+	ege::initgraph(600,800);
+	
+	
+	
+	ege::getch();
+	ege::closegraph();
+	return 0;
+}
+```
+
+#### 创建
+
+PIMAGE 是一种存储图像数据的数据类型。我们绘制图片自然离不开他。所以我们要定义一个 PIMAGE：
+
+```cpp
+ege::PIMAGE img;
+```
+
+我们创建一个 PIMAGE ，同时必须调用一下 newimage 函数，否则会报错。
+
+```cpp
+img=ege::newimage();
+```
+
+#### 获取
+
+获取图像，我们需要调用以下这个函数：
+
+```cpp
+int  EGEAPI getimage(PIMAGE pDstImg, LPCSTR  pImgFile);   // 从图片文件获取图像(bmp/jpg/gif/emf/wmf)
+```
+
+pDstImg：即获取图片的 PIMAGE。
+pImgFile：图片路径。
+
+注意到，这个函数是有返回值的。若加载成功返回 0，否则返回一个非 0 的值：
+
+附录：不同返回值意义。
+
+```cpp
+	grOk                =   0,  
+	grNoInitGraph       =  -1,  
+	grNotDetected       =  -2,
+	grFileNotFound      =  -3, 
+	grInvalidDriver     =  -4,
+	grNoLoadMem         =  -5,
+	grNoScanMem         =  -6,
+	grNoFloodMem        =  -7,
+	grFontNotFound      =  -8,
+	grNoFontMem         =  -9,
+	grInvalidMode       = -10,
+	grError             = -11,   
+	grIOerror           = -12,
+	grInvalidFont       = -13,
+	grInvalidFontNum    = -14,
+	grInvalidVersion    = -18,
+	grException         = 0x10,  
+	grParamError        = 0x11,
+	grInvalidRegion     = 0x12,
+	grOutOfMemory       = 0x13,
+	grNullPointer       = 0x14,
+	grAllocError        = 0x15,
+	grInvalidMemory     = 0xCDCDCDCD,
+```
+
+紧接着上文，我们要获取一张图片：
+
+```cpp
+	LPCSTR path="test.jpeg";  //这里填写图片路径，注意 \ 的转义。
+	ege::getimage(img,path);
+```
+
+#### 绘制
+
+接下来，就是绘制环节。
+
+```cpp
+ege::putimage(0,0,img);
+```
+
+前两个参数是图片左上角坐标，第三个参数是要绘制的 PIMAGE。
+
+全部代码：
+
+```cpp
+#include<bits/stdc++.h>
+#include<ege.h>
+using namespace std;
+int main()
+{
+   ege::initgraph(500,500);
+   
+   ege::PIMAGE img;
+   
+   img=ege::newimage();
+   LPCSTR path="test.jpeg";  //这里填写图片路径，注意 \ 的转义。
+   ege::getimage(img,path);
+   ege::putimage(0,0,img);
+   ege::getch();
+   ege::closegraph();
+   return 0;
+} 
+```
+
+运行结果：\
+![](https://cdn.luogu.com.cn/upload/image_hosting/czwytbv9.png)
+
+下一节，学习音频播放。
+
+\}
 2025年7月14日期 | 都是不审题干的好事第一章\{
 ~~别说我写作不好，不喜勿喷。~~
 

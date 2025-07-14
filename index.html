@@ -96,17 +96,18 @@
     
     <script>
         window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\$', '\$']],
-                displayMath: [['$$', '$$'], ['\$', '\$']],
-                processEscapes: true,
-                processEnvironments: true
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-                ignoreHtmlClass: 'tex2jax_ignore'
-            }
-        };
+    tex: {
+        inlineMath: [['$', '$']],  // 行内公式使用单个$
+        displayMath: [['$$', '$$']],  // 行外公式使用双$$
+        processEscapes: true,
+        processEnvironments: true
+    },
+    options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        ignoreHtmlClass: 'tex2jax_ignore'
+    }
+};
+
         /*function parseIniContent(content) {
             const sections = [];
             const regex = /(.*?)\s*\{\s*([^]*?)\s*\}/g;

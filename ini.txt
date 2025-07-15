@@ -246,6 +246,8 @@ int main()
 
 \}
 2025年7月14日期 | 都是不审题干的好事第一章\{
+作者求关注：[Chinese_good_FaFa](https://www.luogu.com.cn/user/1240580)
+
 ~~别说我写作不好，不喜勿喷。~~
 
 ## 背景介绍

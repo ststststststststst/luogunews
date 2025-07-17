@@ -862,8 +862,7 @@ ege 的学习到此先告一段落，下一章我们讲学习图片，音频，�
 \}
 
 2025年7月9日期 | VScode 配置 C/C++ 环境\{
-By ![](https://cdn.luogu.com.cn/upload/usericon/1019968.png)[lijingshu_304775](https://www.luogu.com.cn/user/1019968)
-# VScode 配置 C/C++ 环境
+By![](https://cdn.luogu.com.cn/upload/usericon/1019968.png)lijingshu_304775
 
 众所周知，VScode 是一款非常强大的代码/文本编辑器。至于它为什么强大请看下图。
 
@@ -903,9 +902,11 @@ By ![](https://cdn.luogu.com.cn/upload/usericon/1019968.png)[lijingshu_304775](h
 
 ![](https://cdn.luogu.com.cn/upload/image_hosting/pqtnd0cy.png)
 
-这一步这关重要请看仔细了。右键`此电脑`，点击`属性`，点击`高级系统设置`，点击`环境变量`，双击系统变量中的 `Path`，点击`新建`，将 `D:\mingw64\bin`（就是mingw64中的 `bin` 文件夹的路径） 粘进去。保存点三个`确定`即可。
+这一步非常重要请看仔细了。右键`此电脑`，点击`属性`，点击`高级系统设置`，点击`环境变量`，双击系统变量中的 `Path`，点击`新建`，将 `D:\mingw64\bin`（就是 mingw64 中的 `bin` 文件夹的路径） 粘进去。保存点三个`确定`即可。（也可以参照下图）。
 
-`win+r` 输入 `cmd` 依次输入 `g++ -v`，`gcc -v`，`gdb -v`，看是否保持，如出现 `...不是内部或外部命令，也不是可运行的程序或批处理文件。`那就是你配置有误，请重新配置。
+![](https://cdn.luogu.com.cn/upload/image_hosting/mx0b7scp.png)
+
+`win+r` 输入 `cmd` 依次输入 `g++ -v`，`gcc -v`，`gdb -v`，看是否报错，如出现 `...不是内部或外部命令，也不是可运行的程序或批处理文件。`那就是你配置有误，请重新配置。
 
 ## 配置 vscode
 
@@ -1005,19 +1006,19 @@ ok,现在你可以发现 `.vscode` 文件夹中不知不觉有了一个 `c_cpp_p
 
    ![](https://cdn.luogu.com.cn/upload/image_hosting/ryheyjnf.png)
 
-   它可以帮助我们更加方便的一键运行代码快捷键是 `ctrl+alt+n`。
+   一键运行代码。安装后按下 `ctrl+alt+n` 即可运行代码。
 
 2. Markdown All in One
 
    ![](https://cdn.luogu.com.cn/upload/image_hosting/l7bc532e.png)
    
-   它可以帮助我们更加方便编写 `Markdown`。
+   它集成了一些 `Markdown` 和 `LaTeX` 的一些函数或公式。
 
 ## 推荐阅读
 
-1. [Markdown+LaTeX+C++| VS Code 搭建高效学习环境](https://www.luogu.com.cn/article/wm6a900g)
+1. [Markdown+LaTeX+C++| VS Code 搭建高效学习环境](https://www.luogu.com.cn/article/wm6a900g)。
 
-2. [VSCode中那些超棒的功能和插件](https://www.luogu.com.cn/article/m3oxrdoc)
+2. [VSCode中那些超棒的功能和插件](https://www.luogu.com.cn/article/m3oxrdoc)。
 
 ## 参考文献
 

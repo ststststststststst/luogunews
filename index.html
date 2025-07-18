@@ -86,26 +86,23 @@ a:visited {
     transform: translate(-50%, -50%);
     overflow: auto;
     box-sizing: border-box;
-    
-    /* 新增图片限制样式 */
-    display: flex;
-    flex-direction: column;
 }
 
-/* 添加图片限制规则 */
+/* 只限制图片最大尺寸但不改变布局 */
 .modal-content img {
-    max-width: 100%;  /* 图片最大宽度不超过容器宽度 */
-    max-height: 60vh; /* 图片最大高度不超过视口的60% */
+    max-width: 90%;  /* 图片最大宽度不超过容器的90% */
+    max-height: 60vh; /* 图片最大高度限制 */
     height: auto;     /* 保持宽高比 */
-    object-fit: contain; /* 保持比例完整显示 */
-    margin: 0 auto;   /* 水平居中 */
-    display: block;   /* 避免图片下方有空白 */
+    display: inline;  /* 保持行内布局 */
+    vertical-align: middle; /* 保持行内对齐方式 */
 }
+
+/* 确保内容区域不会因为图片而撑大 */
 #modal-content {
-    overflow-y: auto;
-    max-height: calc(95vh - 100px); /* 减去标题和padding的高度 */
-    padding-bottom: 20px;
+    max-width: 100%;
+    overflow-wrap: break-word;
 }
+
 
 
         .close {

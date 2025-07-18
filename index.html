@@ -71,17 +71,23 @@ a:visited {
             height: 100%;
             background-color: rgba(0,0,0,0.4);
         }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 700px;
-            border-radius: 5px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
+        
+.modal-content {
+    background-color: #fefefe;
+    margin: 0;  /* 移除顶部边距 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95vw;  /* 使用视口宽度单位 */
+    height: 95vh;  /* 使用视口高度单位 */
+    border-radius: 5px;
+    position: fixed;  /* 固定定位 */
+    top: 50%;  /* 从顶部50%开始 */
+    left: 50%;  /* 从左侧50%开始 */
+    transform: translate(-50%, -50%);  /* 居中 */
+    overflow: auto;
+    box-sizing: border-box;  /* 包含padding和border */
+}
+
         .close {
             color: #aaa;
             float: right;

@@ -16,7 +16,120 @@
 >审核员你好，我发现第xxxx年xx月xx日期文章劣质/内容不够详细/发现错别字/……，申请撤下。
 >申请人：xxx（洛谷@uid）。
 \}
+2025年7月19日期 | 基于 A* 思想的 SPFA 优化-SPFA* \{
+*最短路中 SPFA 已死，$k$ 短路中 A\* 已死，那两者结合起来会如何呢？*
 
+SPFA 获得了成就【超越生死】！
+
+那我为什么这么说呢？因为我通过跑两遍 SPFA 通过了 [P4779](/problem/P4779) !
+
+大家都知道 SPFA 已经死了很长时间了，尽管用各种优化，都改变不了被卡爆的命运。
+
+**但这些优化的本质是什么呢？**
+
+好好想一想，是不是都是为了让 SPFA 的普通队列变得更像优先队列。那我们就是用曾经让 @[fstqwq](https://www.luogu.com.cn/user/12621) 百思不得其 hack 法的 SLF-swap 优化它吧！
+
+而我们的 A\* 算法是不是刚好就是优先队列 BFS+估价函数？那样的话这一对难兄难弟~~在阴间~~不就刚好可以组合起来，成为一个新的求解单源最短路的算法吗？
+
+而对于一个有向图来说，他的价值估计函数 $h(x)$ 刚好就是建反图后原来的终点 $t$ 到他的距离。而实际价值 $g(x)$ 就刚好是**当前源点 $s$ 到该节点的距离**。
+
+而根据估价函数的定义 $f(x)=g(x)+h(x)$，我们可以很容易的得到当前节点的价值 $f(x)$ 就是 $dis_{s\rightarrow x}+\min{\{dis_{x\rightarrow t}\}}$。
+
+而我们根据当前节点所到达节点的估价，选择一个最好的去扩展，就可以快速求出以 $s$ 为源点到每个节点的单源最短路径了。
+
+但又有一个问题——许多求最短路的题目不给终点，要求求出源点 $s$ 到所有节点的最短路长度。那我们该怎么办呢？
+
+此时，随机数就可以派上用场了——随机一个节点跑反图的最短路，秉承着“SPFA Never Dies!”的信念，我们在反图上也跑 SPFA。由于出题人一般不会把数据造的既卡原图又卡反图 ~~（虽然只要卡原图就肯定会在某一个点上卡掉反图的 SPFA）~~，而且在数据量很大时，能随机到被卡的那一个点的概率极低，所以可以放心用随机数。
+
+但是只要你运气足够烂 ~~（应该没几个人运气真的会烂到那种地步）~~，你就会刚好掉到被卡的那一个点上，此时我们需要思考另外的办法。
+
+我们希望那一个点能到达的店尽量的多，这样估价中 `inf` 更少，得到的估价也更有意义，那我们只需要统计每个点在反图上的出度，从出度最大的点开始跑，这样就可以使得到的估价尽可能少的为无意义的 `inf`。
+
+但这样的贪心策略肯定会被良心出题人狠狠针对，但如果每个点都跑一遍 dfs，求哪一个点连通的点最多，就导致时间复杂度会高达 $O(V^2)$！这就完全达不到优化的效果，反而会因为预处理时过多的时耗导致超时爆 $0$。
+
+最后说了这么多，将代码放出来给大家思考如何 hack 吧。
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+static constexpr int N=5e5+5,inf=0x3f3f3f3f3f3f3f3fll;
+namespace _g{
+int head[N],nxt[N<<1],to[N<<1],weight[N<<1],tot,d[N];
+int dis[N],cnt[N],n;bitset<N> vis;
+inline void add(const int& u,const int& v,const int& w=1){
+	to[++tot]=v;weight[tot]=w;
+	nxt[tot]=head[u];head[u]=tot;
+	return;
+}
+inline bool spfa(const int &s=1){
+	memset(dis,0x3f,sizeof dis);
+	memset(cnt,0,sizeof cnt);
+	vis.reset();dis[s]=0;cnt[s]=1;
+	queue<int> q;q.push(s);vis[s]=1;
+	while(!q.empty()){
+		int u=q.front();q.pop();vis[u]=0;
+		for(int i=head[u];i;i=nxt[i]){
+			int v=to[i],w=weight[i];
+			if(dis[v]>dis[u]+w){
+				dis[v]=dis[u]+w;++cnt[v];
+				if(cnt[v]>=n) return true;
+				if(!vis[v]) q.push(v),vis[v]=1;
+				if(dis[q.back()]<dis[q.front()]) swap(q.front(),q.back());
+			}
+		}
+	}
+	return false;
+}
+}
+namespace G{
+int head[N],nxt[N<<1],to[N<<1],weight[N<<1],tot;
+int dis[N],cnt[N],f[N],n,e;bitset<N> vis;
+inline void add(const int& u,const int& v,const int& w=1){
+	to[++tot]=v;weight[tot]=w;
+	nxt[tot]=head[u];head[u]=tot;
+	return;
+}
+inline bool spfa_star(const int &s=1){
+	memset(dis,0x3f,sizeof dis);
+	memset(cnt,0,sizeof cnt);
+	vis.reset();dis[s]=0;cnt[s]=1;f[s]=_g::dis[s];
+	queue<int> q;q.push(s);vis[s]=1;
+	while(!q.empty()){
+		int u=q.front();q.pop();vis[u]=0;
+		for(int i=head[u];i;i=nxt[i]){
+			int v=to[i],w=weight[i];
+			if(dis[v]>dis[u]+w){
+				f[v]=(dis[v]=dis[u]+w)+_g::dis[v];++cnt[v];
+				if(cnt[v]>=n) return true;
+				if(!vis[v]) q.push(v),vis[v]=1;
+				if(f[q.back()]<f[q.front()]) swap(q.front(),q.back());
+			}
+		}
+	}
+	return false;
+}
+}
+signed main(){
+	//freopen("data.in","r",stdin);
+	//#define DEBUG
+	#ifndef DEBUG
+	ios::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
+	#endif
+	int n,m,s,t=0;cin>>n>>m>>s;G::n=_g::n=n;
+	for(int i=1,u,v,w;i<=m;++i){
+		cin>>u>>v>>w,G::add(u,v,w),_g::add(v,u,w),++_g::d[v];
+		if(_g::d[v]>_g::d[t]) t=v;
+	}
+	_g::spfa(t),G::spfa_star(s);
+	for(int i=1;i<=n;++i){
+		if(G::dis[i]==inf) cout<<"No path from "<<s<<" to "<<i<<" !\n";
+		else cout<<"From "<<s<<" to "<<i<<" cost "<<G::dis[i]<<".\n";
+	}
+	return 0;
+}
+```
+\}
 2025年7月18日期 | PHP入门 \{
 # 开始、结束
 PHP语言通常已`<?php`开始，`?>`结束。

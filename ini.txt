@@ -16,6 +16,214 @@
 >审核员你好，我发现第xxxx年xx月xx日期文章劣质/内容不够详细/发现错别字/……，申请撤下。
 >申请人：xxx（洛谷@uid）。
 \}
+2025年7月23日期 | 洛谷日报 #2：图论基础——从存图到最短路算法\{
+## **洛谷日报 #2：图论基础——从存图到最短路算法**
+
+## **前言**
+图论是算法竞赛的核心内容，涉及**图的存储、遍历、最短路**等。本文将从基础出发，讲解邻接表、DFS/BFS、Dijkstra算法，并附上洛谷例题。
+
+由 AI 生成。
+
+## **1. 图的存储方式**
+### **(1) 邻接矩阵**
+- 适合稠密图，空间 \( O(V^2) \)。
+```cpp
+int G[MAXN][MAXN];
+```
+
+### **(2) 邻接表（推荐）**
+- 适合稀疏图，空间 \( O(V + E) \)。
+```cpp
+vector<int> adj[MAXN]; // 无权图
+vector<pair<int, int>> adj[MAXN]; // 带权图
+```
+
+---
+
+## **2. 图的遍历**
+### **(1) DFS（深度优先搜索）**
+**代码框架**：
+```cpp
+void dfs(int u, int fa) {
+    for (int v : adj[u]) {
+        if (v != fa) dfs(v, u);
+    }
+}
+```
+
+### **(2) BFS（广度优先搜索）**
+**代码框架**：
+```cpp
+queue<int> q;
+q.push(start);
+while (!q.empty()) {
+    int u = q.front(); q.pop();
+    for (int v : adj[u]) {
+        if (!vis[v]) q.push(v);
+    }
+}
+```
+
+---
+
+## **3. 最短路算法**
+### **(1) Dijkstra算法（非负权图）**
+- 贪心思想，每次扩展最短路径。
+- **堆优化版**：
+```cpp
+priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+pq.push({0, s});
+while (!pq.empty()) {
+    auto [d, u] = pq.top(); pq.pop();
+    if (vis[u]) continue;
+    vis[u] = true;
+    for (auto [v, w] : adj[u]) {
+        if (dist[v] > d + w) {
+            dist[v] = d + w;
+            pq.push({dist[v], v});
+        }
+    }
+}
+```
+
+---
+
+## **4. 洛谷练习题推荐**
+1. [P3371 单源最短路径（弱化版）](https://www.luogu.com.cn/problem/P3371)
+2. [P4779 单源最短路径（标准版）](https://www.luogu.com.cn/problem/P4779)
+3. [P3916 图的遍历](https://www.luogu.com.cn/problem/P3916)
+
+---
+
+## **总结**
+图论的学习路径：
+1. **掌握图的存储方式**（邻接表最常用）。
+2. **熟练DFS/BFS**，理解其应用场景。
+3. **掌握最短路算法**（Dijkstra、Floyd、SPFA）。
+\}
+2025年7月22日期 | 洛谷日报 #1：贪心算法入门——从区间问题到哈夫曼编码\{
+# **洛谷日报 #1：贪心算法入门——从区间问题到哈夫曼编码**
+
+由 AI 生成。
+
+
+## **前言**
+贪心算法（Greedy Algorithm）是算法竞赛中的重要思想，它通过**局部最优选择**来寻求全局最优解。本文将从经典例题入手，讲解贪心算法的基本思想，并分析其适用场景和局限性。
+
+---
+
+## **1. 贪心算法的基本思想**
+贪心算法的核心是：**每一步都做出当前看起来最优的选择**，并希望最终结果也是最优的。与动态规划不同，贪心算法**不会回退**，因此效率更高，但需要证明其正确性。
+
+### **贪心算法的适用条件**
+1. **最优子结构**：问题的最优解包含子问题的最优解。
+2. **贪心选择性质**：局部最优选择能导致全局最优解。
+
+---
+
+## **2. 经典例题：区间调度问题**
+**问题描述**（洛谷 P1803）：  
+给定 \( n \) 个区间 \([a_i, b_i)\)，求最多能选择多少个**互不重叠**的区间。
+
+### **贪心策略**
+1. **按右端点排序**：优先选择结束时间早的区间，给后面留更多空间。
+2. **遍历并选择**：维护当前最晚结束时间，如果新区间不冲突则选择。
+
+**代码实现**：
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Interval {
+    int a, b;
+    bool operator<(const Interval &rhs) const {
+        return b < rhs.b; // 按右端点排序
+    }
+};
+
+int main() {
+    int n;
+    cin >> n;
+    vector<Interval> intervals(n);
+    for (int i = 0; i < n; i++) {
+        cin >> intervals[i].a >> intervals[i].b;
+    }
+    sort(intervals.begin(), intervals.end());
+
+    int ans = 0, last_end = 0;
+    for (int i = 0; i < n; i++) {
+        if (intervals[i].a >= last_end) { // 不冲突
+            ans++;
+            last_end = intervals[i].b;
+        }
+    }
+    cout << ans << endl;
+    return 0;
+}
+```
+**时间复杂度**：\( O(n \log n) \)，主要来自排序。
+
+---
+
+## **3. 哈夫曼编码（Huffman Coding）**
+**问题背景**：如何用最少的二进制位编码字符，使得总长度最小？
+
+### **贪心策略**
+1. **优先合并频率最小的两个节点**，直到只剩一个根节点。
+2. **使用优先队列（最小堆）**高效实现。
+
+**代码实现**：
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int huffman(const vector<int> &freq) {
+    priority_queue<int, vector<int>, greater<int>> pq(freq.begin(), freq.end());
+    int res = 0;
+    while (pq.size() > 1) {
+        int x = pq.top(); pq.pop();
+        int y = pq.top(); pq.pop();
+        res += x + y;
+        pq.push(x + y);
+    }
+    return res;
+}
+
+int main() {
+    vector<int> freq = {5, 9, 12, 13, 16, 45}; // 字符频率
+    cout << huffman(freq) << endl;
+    return 0;
+}
+```
+**时间复杂度**：\( O(n \log n) \)。
+
+---
+
+## **4. 贪心算法的局限性**
+贪心算法**不一定能得到全局最优解**，例如：
+- **部分背包问题**：可以用贪心（按性价比排序）。
+- **0-1背包问题**：贪心失效，必须用动态规划。
+
+**判断贪心是否适用的方法**：
+1. 尝试举反例。
+2. 尝试数学归纳法证明。
+
+---
+
+## **5. 洛谷练习题推荐**
+1. [P1803 凌乱的yyy / 线段覆盖](https://www.luogu.com.cn/problem/P1803)（区间调度）
+2. [P1090 合并果子](https://www.luogu.com.cn/problem/P1090)（哈夫曼编码）
+3. [P1223 排队接水](https://www.luogu.com.cn/problem/P1223)（排序贪心）
+
+---
+
+## **总结**
+贪心算法的核心是**局部最优导致全局最优**，适用于特定问题。学习时要注意：
+1. **如何设计贪心策略**（如排序、优先队列）。
+2. **证明正确性**（举反例或数学证明）。
+3. **识别不适用的场景**（如0-1背包）。
+
+\}
 2025年7月21日期 | 动态规划入门：从斐波那契到背包问题 \{
 
 **本文章由 DeepSeek 生成。**  
@@ -115,8 +323,8 @@ for (int i = 0; i < w.size(); i++)
 
 将 $F(x)$ 乘上一个 $x^2$ 后，可得到 $x^2F(x)=f_0x^2+f_1x^3+\cdots$。
 
-观察出什么蹊跷了吗？如果没有，我这样写给各位观众老爷们看：
-$$\begin{aligned}F(x)&=f_0+f_1x+f_2x^2+f_3x^3+\cdots\\xF(x)&=\,\ \ \ \ \ \ \ \ f_0x+f_1x^2+f_2x^3+\cdots\\x^2F(x)&=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f_0x^2+f_1x^3+\cdots\end{aligned}$$
+观察出什么蹊跷了吗？如果没有，我这样写给各位观众老爷们看：  
+![](https://cdn.luogu.com.cn/upload/image_hosting/cg0w99ov.png)
 
 这下子，就很容易看出来是怎么个事了：$F(x)=xF(x)+x^2F(x)$。但这个等式对于第一项不满足：$f_0=1$，但实际上这一处为 $0$！所以我们要手动在等号右边补一个 $1$，得到 $F(x)=xF(x)+x^2F(x)+1$，这样这个等式就完美无缺了。
 

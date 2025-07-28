@@ -1,6 +1,6 @@
 
 
-征稿\{
+征稿
 对于洛谷民间报的投稿、更改内容、勘误，请与@[sundingjia](https://www.luogu.com.cn/user/704139)联系，请务必符合要求（最下方），对于技术问题（如格式错乱、加载了**至少2分钟**等），请与@[Chinese_good_FaFa](https://www.luogu.com.cn/user/1240580)联系。
 
 ## 民间报要求
@@ -16,8 +16,8 @@
 >审核员你好，我发现第xxxx年xx月xx日期文章劣质/内容不够详细/发现错别字/……，申请撤下。
 >申请人：xxx（洛谷@uid）。
 \}
-2025年7月23日期 | 洛谷日报 #2：图论基础——从存图到最短路算法\{
-## **洛谷日报 #2：图论基础——从存图到最短路算法**
+
+2025年7月23日期 | 图论基础——从存图到最短路算法
 
 ## **前言**
 图论是算法竞赛的核心内容，涉及**图的存储、遍历、最短路**等。本文将从基础出发，讲解邻接表、DFS/BFS、Dijkstra算法，并附上洛谷例题。
@@ -34,11 +34,19 @@ int G[MAXN][MAXN];
 ### **(2) 邻接表（推荐）**
 - 适合稀疏图，空间 \( O(V + E) \)。
 ```cpp
-vector<int> adj[MAXN]; // 无权图
-vector<pair<int, int>> adj[MAXN]; // 带权图
+向量
+向量
 ```
 
 ---
+
+
+
+
+
+
+
+
 
 ## **2. 图的遍历**
 ### **(1) DFS（深度优先搜索）**
@@ -54,7 +62,7 @@ void dfs(int u, int fa) {
 ### **(2) BFS（广度优先搜索）**
 **代码框架**：
 ```cpp
-queue<int> q;
+队列<整数> q;
 q.push(start);
 while (!q.empty()) {
     int u = q.front(); q.pop();
@@ -66,15 +74,20 @@ while (!q.empty()) {
 
 ---
 
+
+
+
+
+
 ## **3. 最短路算法**
 ### **(1) Dijkstra算法（非负权图）**
 - 贪心思想，每次扩展最短路径。
 - **堆优化版**：
 ```cpp
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+优先队列
 pq.push({0, s});
 while (!pq.empty()) {
-    auto [d, u] = pq.top(); pq.pop();
+    自动 [d, u] = pq.顶部(); pq.弹出();
     if (vis[u]) continue;
     vis[u] = true;
     for (auto [v, w] : adj[u]) {
@@ -88,6 +101,8 @@ while (!pq.empty()) {
 
 ---
 
+
+
 ## **4. 洛谷练习题推荐**
 1. [P3371 单源最短路径（弱化版）](https://www.luogu.com.cn/problem/P3371)
 2. [P4779 单源最短路径（标准版）](https://www.luogu.com.cn/problem/P4779)
@@ -95,14 +110,14 @@ while (!pq.empty()) {
 
 ---
 
+
 ## **总结**
 图论的学习路径：
 1. **掌握图的存储方式**（邻接表最常用）。
 2. **熟练DFS/BFS**，理解其应用场景。
 3. **掌握最短路算法**（Dijkstra、Floyd、SPFA）。
 \}
-2025年7月22日期 | 洛谷日报 #1：贪心算法入门——从区间问题到哈夫曼编码\{
-# **洛谷日报 #1：贪心算法入门——从区间问题到哈夫曼编码**
+2025年7月22日期 | 贪心算法入门——从区间问题到哈夫曼编码
 
 由 AI 生成。
 
@@ -112,6 +127,7 @@ while (!pq.empty()) {
 
 ---
 
+
 ## **1. 贪心算法的基本思想**
 贪心算法的核心是：**每一步都做出当前看起来最优的选择**，并希望最终结果也是最优的。与动态规划不同，贪心算法**不会回退**，因此效率更高，但需要证明其正确性。
 
@@ -120,6 +136,7 @@ while (!pq.empty()) {
 2. **贪心选择性质**：局部最优选择能导致全局最优解。
 
 ---
+
 
 ## **2. 经典例题：区间调度问题**
 **问题描述**（洛谷 P1803）：  
@@ -240,7 +257,8 @@ int main() {
 ### **2. 动态规划优化**  
 - **记忆化搜索**：用数组存储已计算的结果。  
   ```cpp
-  int fib(int n, vector<int>& memo) {
+  ```cpp
+int fib(int n, vector
       if (n <= 1) return n;
       if (memo[n] != -1) return memo[n];
       return memo[n] = fib(n-1, memo) + fib(n-2, memo);

@@ -8,7 +8,7 @@
 /* 基础样式 */
 a {
   text-decoration: none; /* 去除下划线 */
-  color: #333; /* 默认颜色 */
+  color: #87CEFA; /* 默认颜色 */
   transition: color 0.3s ease; /* 颜色过渡动画 */
   padding: 2px 4px; /* 增加点击区域 */
   border-radius: 3px; /* 圆角 */
@@ -233,7 +233,7 @@ function parseIniContent(content) {
                 .then(data => {
                     const sections = parseIniContent(data);
                     if (sections.length === 0) {
-                        throw new Error('ini.txt中没有找到有效内容。请确保格式为: 标题{内容}');
+                        throw new Error('日报出现了某些错误，请耐心等待或联系洛谷@Chinese_good_FaFa（uid为1240580）');
                     }
                     renderSections(sections);
                 })
@@ -244,9 +244,9 @@ function parseIniContent(content) {
                         `加载错误: ${error.message}<br>
                          请确保: 
                          <ol>
-                           <li>ini.txt文件存在</li>
-                           <li>文件格式正确(标题{内容})</li>
-                           <li>服务器允许访问该文件</li>
+                           <li>网络良好且浏览器兼容</li>
+                           <li>此网页没有被防火墙拦截</li>
+                           <li>如果以上条件全部拥有，请耐心等待或联系洛谷@Chinese_good_FaFa（uid为1240580）</li>
                          </ol>`;
                 });
         });
